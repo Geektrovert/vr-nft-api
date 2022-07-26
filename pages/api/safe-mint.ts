@@ -32,13 +32,10 @@ export default async function handler(
     process.env.CONTRACT_ADDRESS
   );
 
-  console.log({ acc: kit.defaultAccount });
-
   try {
     const result = await token.methods
       .safeMint(address, name)
       .send({ gas: 2100000, gasPrice: 200000000, from: kit.defaultAccount });
-    console.log({ result });
     res.status(200).json({ message: "Successfully minted" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
