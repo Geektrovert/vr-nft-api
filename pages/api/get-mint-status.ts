@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { newKit, ContractKit } from "@celo/contractkit";
 
-import SpaceTokenABI from "../../abi/SpaceTokenABI.json";
+import { getKitWithAccount, getSpaceToken } from "../../utils/kitUtils";
 
 type Error = {
   message: string;
@@ -25,15 +24,8 @@ export default async function handler(
     return;
   }
 
-  const kit = newKit(process.env.RPC_URL!);
-  kit.defaultAccount = process.env.WALLET_ADDRESS;
-  kit.connection.addAccount(process.env.RINKEBY_PRIVATE_KEY!);
-
-  const token = new kit.web3.eth.Contract(
-    // @ts-ignore
-    SpaceTokenABI,
-    process.env.CONTRACT_ADDRESS
-  );
+  const kit = getKitWithAccount();
+  const token = getSpaceToken(kit);
 
   try {
     const result = await token.methods
