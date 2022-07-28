@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { getWeb3WithAccount, getSpaceToken } from "../../utils/kitUtils";
+import { getWeb3WithAccount, getSpaceToken } from "../../utils/web3Utils";
 
 type Data = {
   message: string;
