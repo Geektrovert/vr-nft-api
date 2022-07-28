@@ -25,11 +25,12 @@ export default async function handler(
   const token = getSpaceToken(kit);
 
   try {
-    const result = await token.methods
+    await token.methods
       .safeMint(address, name)
-      .send({ gas: 2100000, gasPrice: 200000000, from: kit.defaultAccount });
+      .send({ gas: 2100000, gasPrice: 200000000, from: kit.web3.eth.defaultAccount });
     res.status(200).json({ message: "Successfully minted" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 }

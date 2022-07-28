@@ -4,8 +4,9 @@ import SpaceTokenABI from "../abi/SpaceTokenABI.json";
 
 export function getKitWithAccount() {
   const kit = newKit(process.env.RPC_URL!);
-  kit.defaultAccount = process.env.WALLET_ADDRESS;
-  kit.connection.addAccount(process.env.RINKEBY_PRIVATE_KEY!);
+  const account = kit.web3.eth.accounts.privateKeyToAccount(`0x${process.env.RINKEBY_PRIVATE_KEY!}`);
+  kit.web3.eth.accounts.wallet.add(account);
+  kit.web3.eth.defaultAccount = account.address;
 
   return kit;
 }
