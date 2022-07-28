@@ -4,6 +4,7 @@ import { getWeb3WithAccount, getSpaceToken } from "../../utils/web3Utils";
 
 type Data = {
   message: string;
+  data?: any;
 };
 
 export default async function handler(
@@ -25,21 +26,19 @@ export default async function handler(
   const token = getSpaceToken(web3);
 
   try {
-    const result = await token.methods.safeMint(address, name).send(
-      {
-        gas: 2200000,
-        gasPrice: 650000000,
-        from: web3.eth.defaultAccount,
-      },
-      (err: Error, tx: string) => {
-        console.log(tx);
-      }
-    );
-    console.log(result);
-    res.status(200).json(result);
+    const result = await token.methods.safeMint(address, name).send({
+      gas: 2600000,
+      gasPrice: 3650000000,
+      from: web3.eth.defaultAccount,
+    });
+
+    res.status(200).json({
+      message: "Successfully Minted",
+      data: result,
+    });
+    return;
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: "error", data: error });
     return;
   }
 }
