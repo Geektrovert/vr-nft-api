@@ -1,18 +1,20 @@
-import { newKit, ContractKit } from "@celo/contractkit";
+import Web3 from "web3";
 
 import SpaceTokenABI from "../abi/SpaceTokenABI.json";
 
-export function getKitWithAccount() {
-  const kit = newKit(process.env.RPC_URL!);
-  const account = kit.web3.eth.accounts.privateKeyToAccount(`0x${process.env.RINKEBY_PRIVATE_KEY!}`);
-  kit.web3.eth.accounts.wallet.add(account);
-  kit.web3.eth.defaultAccount = account.address;
+export function getWeb3WithAccount() {
+  const web3 = new Web3(process.env.RPC_URL!);
+  const account = web3.eth.accounts.privateKeyToAccount(
+    `0x${process.env.RINKEBY_PRIVATE_KEY!}`
+  );
+  web3.eth.accounts.wallet.add(account);
+  web3.eth.defaultAccount = account.address;
 
-  return kit;
+  return web3;
 }
 
-export function getSpaceToken(kit: ContractKit) {
-  return new kit.web3.eth.Contract(
+export function getSpaceToken(web3: Web3) {
+  return new web3.eth.Contract(
     // @ts-ignore
     SpaceTokenABI,
     process.env.CONTRACT_ADDRESS
