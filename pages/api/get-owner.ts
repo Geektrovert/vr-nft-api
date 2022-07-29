@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { getKitWithAccount, getSpaceToken } from "../../utils/kitUtils";
+import { getWeb3WithAccount, getSpaceToken } from "../../utils/web3Utils";
 
 type Error = {
   message: string;
@@ -24,7 +24,7 @@ export default async function handler(
     return;
   }
 
-  const kit = getKitWithAccount();
+  const kit = getWeb3WithAccount();
   const token = getSpaceToken(kit);
 
   try {
