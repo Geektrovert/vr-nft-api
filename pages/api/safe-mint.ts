@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { getKitWithAccount, getSpaceToken } from "../../utils/kitUtils";
+import { getWeb3WithAccount, getSpaceToken } from "../../utils/web3Utils";
 
 type Data = {
   message: string;
+  data?: any;
 };
 
 export default async function handler(
@@ -21,28 +22,23 @@ export default async function handler(
     return;
   }
 
-  const kit = getKitWithAccount();
-  const token = getSpaceToken(kit);
+  const web3 = getWeb3WithAccount();
+  const token = getSpaceToken(web3);
 
   try {
-    await token.methods
-      .safeMint(address, name)
-      .send({ gas: 2100000, gasPrice: 200000000, from: kit.web3.eth.defaultAccount }, async (_error: any, _txHash: string) => {
-        if (_error) {
-          res.status(500).json({ message: _error });   
-          return; 
-        }
-        let transactionReceipt = null
-        while (transactionReceipt == null) {
-            transactionReceipt = await kit.web3.eth.getTransactionReceipt(_txHash); 
-        }
-        res.status(200).json({ message: "Successfully minted\n"+JSON.stringify(transactionReceipt)});
-        return;
-        
-      });
+    const result = await token.methods.safeMint(address, name).send({
+      gas: 2600000,
+      gasPrice: 3650000000,
+      from: web3.eth.defaultAccount,
+    });
+
+    res.status(200).json({
+      message: "Successfully Minted",
+      data: result,
+    });
+    return;
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: "error", data: error });
     return;
   }
 }
